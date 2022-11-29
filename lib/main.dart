@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 void main() {
   runApp(const MyApp());
   SystemChrome.setPreferredOrientations(
-          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
-      .then((value) => runApp(MyApp()));
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+      .then((value) => runApp(const MyApp()));
   configLoading();
 }
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       builder:
-          EasyLoading.init(builder: (BuildContext? context, Widget? child) {
+      EasyLoading.init(builder: (BuildContext? context, Widget? child) {
         final MediaQueryData data = MediaQuery.of(context!);
         final scale = data.textScaleFactor.clamp(1.0, 1.3);
         return MediaQuery(
@@ -58,38 +58,51 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final controller = Get.put(ApiController());
+  final controllerApi = Get.put(ApiController());
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Obx(
-        () => ListView.builder(
-          itemCount: controller.list.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Padding(
-              padding: const EdgeInsets.only(
-                  top: 10, bottom: 10, left: 20, right: 20),
-              child: Container(
-                height: 50,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(24),
-                    color: Colors.yellow.withOpacity(0.6)),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      controller.list[index]?.name ?? "",
-                      style: const TextStyle(color: Colors.black, fontSize: 16),
-                    )
-                  ],
-                ),
-              ),
-            );
-          },
-        ),
+      appBar: AppBar(
+        title: const Text('GetX State Management'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: GetX<ApiController>(
+                builder: (controller) {
+                  return ListView.builder(
+                      itemCount: controller.list.length,
+                      itemBuilder: (BuildContext context, int index)
+                  {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          top: 15, left: 15, right: 15),
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(topLeft: Radius.circular(20),bottomRight: Radius.circular(20)),
+                            color: Colors.blue.withOpacity(0.9)),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              controller.list[index]?.name ?? "",
+                              style:
+                              const TextStyle(
+                                  color: Colors.white, fontSize: 18,fontWeight: FontWeight.w500),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  });
+                }
+            ),
+          ),
+        ],
       ),
     );
   }
